@@ -1,14 +1,11 @@
 import customtkinter
 import datetime
-import pickle
-import os
 
-currentfiledir = os.path.dirname(os.path.realpath(__file__))
-filedir = currentfiledir + "/time.pkl"
+### {usename : password}
 
 customtkinter.set_appearance_mode('dark')
-customtkinter.set_default_color_theme('green')
-saved_name = ['ryan','ryan']
+customtkinter.set_default_color_theme('blue')
+saved_names = ['name','name']
 root = customtkinter.CTk()
 root.geometry('800x600')
 
@@ -17,30 +14,41 @@ def login_time():
     ##### display at top (or bottom) of frame after login button was pressed ####
     
     t = today.strftime("%m/%d/%Y, %I:%M:%S")# ------> retrieve documen.              
-    with open(filedir, 'wb') as file:
-        pickle.dump(t, file)
+    tdb = open('Time Log.txt', 'a')
+    tdb.write(t+ '\n')
+        
     return 'Logged in at {} '.format(t)
-    
+
+counter = 0
 def check(user,password):
-    credentials = [user.lower().strip(), password] # ---> matching lists
-    if credentials == saved_name:
-        clear_frame()
+    global counter
+    wrong = customtkinter.CTkLabel(root, text = 'Username or Password is incorect', font = ("Times New Roman", 25), text_color='#fc2c03')
+    wrong.pack_forget()
+    
+    credentials = [user.lower().strip(), password]
+# ---> if matching lists
+    if credentials == saved_names:                  #         /\
+        clear_frame()                              #       then clear frame and display the camera
         display_camera()
+        counter = 0
     else:
-        wrong = customtkinter.CTkLabel(root, text = 'Invalid User', font = ("Times New Roman", 25), text_color='#fc2c03')
-        wrong.pack(pady = 5, padx = 2)
+        counter += 1
+        wrong.pack(pady = 1, padx = 2)
+        if counter == 2:
+            wrong.destroy()
+            counter = 1
 
 def clear_frame():
-    for widgets in root.winfo_children(): ######### refrence #######
+    for widgets in root.winfo_children(): ######### refrence #######  #gets every child widget and kills it.
         widgets.destroy()
     
-def display_camera():
+def display_camera():   #### displays camera with options (Greyscale, or Normal Video) #[[[[TODO# embed video into frame]]]]]
     clear_frame()
     frame = customtkinter.CTkFrame(master = root)
     frame.pack(pady = 20, padx = 60, fill = 'both', expand= True)
     
     time_text = login_time()
-    button = customtkinter.CTkButton(root, text = 'Canny Edge')
+    button = customtkinter.CTkButton(root, text = 'Greyscale')
     button.pack(padx = 12, pady = 0)
     
     button2 = customtkinter.CTkButton(root, text = 'Normal Video')
@@ -52,7 +60,7 @@ def display_camera():
     logout_button = customtkinter.CTkButton(master = frame, text = 'Logout', command = lambda: login_page())
     logout_button.pack(pady = 5, padx = 10)
 
-def new_user():
+def new_user():     #[[[[[#TODO## add user to a list of names used to sign in]]]]]
     clear_frame()
     frame = customtkinter.CTkFrame(master = root)
     frame.pack(pady = 20, padx = 60, fill = 'both', expand= True)
@@ -69,12 +77,17 @@ def new_user():
     back_button = customtkinter.CTkButton(master = frame, text = 'Back', command = lambda: login_page())
     back_button.pack(pady = 5, padx = 10)
     
+    ndb = open('Users.txt', 'a')
+    ndb.write(c_username+','+c_password)
+    ndb.close()
+    
+    
 def login_page():
     clear_frame()
     frame = customtkinter.CTkFrame(master = root)
     frame.pack(pady = 20, padx = 60, fill = 'both', expand= True)
     
-    label = customtkinter.CTkLabel(master = frame, text = 'Login System', font = ("Times New Roman", 24))
+    label = customtkinter.CTkLabel(master = frame, text = 'Eye-Spy', font = ("Times New Roman", 24))
     label.pack(pady = 12, padx = 10)
 
     entry1 = customtkinter.CTkEntry(master = frame, placeholder_text= 'Username')
