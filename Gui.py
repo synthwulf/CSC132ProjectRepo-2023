@@ -26,7 +26,8 @@ def login_time():
 def clear_frame():
     for widgets in root.winfo_children(): ######### refrence #######  #gets every child widget and kills it.
         widgets.destroy()
-    
+
+
 def display_camera():   #### displays camera with options (Greyscale, or Normal Video) #[[[[TODO# embed video into frame]]]]]
     clear_frame()
     frame = customtkinter.CTkFrame(master = root)
