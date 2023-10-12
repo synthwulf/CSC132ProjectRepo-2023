@@ -57,13 +57,47 @@ def check_data():
 def hasNumber(input):
     return any(char.isdigit() for char in input)
 
+infoDisplay_counter1 = 0
+infoDisplay_counter2= 0
+infoDisplay_counter3 = 0
 def rewrite(user,password):
+    global infoDisplay_counter1
+    global infoDisplay_counter2
+    global infoDisplay_counter3
     if (user == '' or password == ''):
+        empty = customtkinter.CTkLabel(root, text = 'Username or Password not filled', font = ("Times New Roman", 25), text_color='#fc2c03')
+        empty.pack_forget()
+        infoDisplay_counter1 += 1
+        empty.pack(pady = 1, padx = 2)
+        print(infoDisplay_counter1)
+        if infoDisplay_counter1 == 2:
+            empty.destroy()
+            infoDisplay_counter1 = 1
         return
+        
     if (len(user) < 5):
-        return ## add things later
+        short = customtkinter.CTkLabel(root, text = 'Username must have at least 5 characters', font = ("Times New Roman", 25), text_color='#fc2c03')
+        short.pack_forget()
+        infoDisplay_counter2 += 1
+        short.pack(pady = 1, padx = 2)
+        if infoDisplay_counter2 == 2:
+            short.destroy()
+            infoDisplay_counter2 = 1
+        return
+            
     if (hasNumber(password) == False):
-        return ## add things later
+        no_number = customtkinter.CTkLabel(root, text = 'Password must have at least 1 number', font = ("Times New Roman", 25), text_color='#fc2c03')
+        no_number.pack_forget()
+        infoDisplay_counter3 += 1
+        no_number.pack(pady = 1, padx = 2)
+        if infoDisplay_counter3 == 2:
+            no_number.destroy()
+            infoDisplay_counter3 = 1
+        return
+    
+    infoDisplay_counter1 = 0
+    infoDisplay_counter2 = 0
+    infoDisplay_counter3 = 0
     retrieved_data = check_data()
     with open('users.pkl', 'wb') as t:
         retrieved_data.update({user:password})
@@ -95,10 +129,10 @@ def new_user():
     back_button = customtkinter.CTkButton(master = frame, text = 'Back', command = lambda: login_page())
     back_button.pack(pady = 5, padx = 10)
 
-counter = 0
+wrongDisplay_counter = 0
 def check(user,password):
     retrieved_data = check_data()
-    global counter
+    global wrongDisplay_counter
     wrong = customtkinter.CTkLabel(root, text = 'Username or Password is incorect', font = ("Times New Roman", 25), text_color='#fc2c03')
     wrong.pack_forget()
     
@@ -107,19 +141,13 @@ def check(user,password):
     if retrieved_data.get(user) == password:
         clear_frame()                              #then clear frame and display the camera
         display_camera()
-        counter = 0
+        wrongDisplay_counter = 0
     else:
-        counter += 1
+        wrongDisplay_counter += 1
         wrong.pack(pady = 1, padx = 2)
-        if counter == 2:
+        if wrongDisplay_counter == 2:
             wrong.destroy()
-            counter = 1
-    # except AttributeError: #if NoneType errors is thrown
-    #     wrong.pack(pady = 1, padx = 2)
-    #     counter += 1
-    #     if counter == 2:
-    #             wrong.destroy()
-    #             counter = 1
+            wrongDisplay_counter = 1
         
 def login_page():
     clear_frame()
