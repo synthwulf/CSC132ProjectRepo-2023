@@ -1,5 +1,5 @@
-# CSC132ProjectRepo
-Repository for CSC 132 Expo Project by...
+# CSC-132 2023
+Contributers for this Project...
 
 Ryan Anderson<br>
 Lane Krinkle<br>
