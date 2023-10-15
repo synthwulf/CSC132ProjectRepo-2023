@@ -51,7 +51,7 @@ def check_data():
         with open(data_file, 'rb') as t:
             retrieved_data = pickle.load(t) #### loads data into a variable
     except:
-        retrieved_data = {'test':'nuts'}
+        retrieved_data = {'testing':'password1'}
     return retrieved_data
 
 def hasNumber(input):
