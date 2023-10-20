@@ -1,7 +1,7 @@
 # CSC-132 2023
 Contributers for this Project...
 
-Ryan Anderson<br>
-Lane Krinkle<br>
-Braydon Callender<br>
-Brandon Gros<br>
+Ryan Anderson - Programmer(GUI)<br>
+Lane Krinkle - Programmer (Camera)<br>
+Braydon Callender - Enclosure Builder<br>
+Brandon Gros - Enclosure Builder<br>
