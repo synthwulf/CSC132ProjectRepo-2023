@@ -18,16 +18,17 @@ data_file = file_path + '/'+ "users.pkl"
 
 def login_time():
     today = datetime.datetime.now() #### I is 12- hour ##### computer thing
-    ##### display at top (or bottom) of frame after login button was pressed ####
     
-    t = today.strftime("%m/%d/%Y, %I:%M:%S")# ------> retrieve documen.              
+    
+    ##### display at top (or bottom) of frame after login button was pressed ####
+    t = today.strftime("%m/%d/%Y, %I:%M:%S")# ------> https://docs.python.org/3/library/time.html ; https://stackoverflow.com/questions/14762518/python-datetime-strptime-and-strftime-how-to-preserve-the-timezone-informat              
     tdb = open('Time Log.txt', 'a')
     tdb.write(t+ '\n')
         
     return 'Logged in at {} '.format(t)
 
 def clear_frame():
-    for widgets in root.winfo_children(): ######### refrence #######  #gets every child widget and kills it.
+    for widgets in root.winfo_children(): ######### refrence #######  #gets every child of a specific widget and kills it.
         widgets.destroy()
 
 
@@ -57,22 +58,21 @@ def display_camera():
 
     cam_label = customtkinter.CTkLabel(frame)
     cam_label.pack(pady=1, padx=1)
-
+    
+    ### continuosly captures frame from video source converts them into RGB then displays the frame in the GUI
     while True:
-        ret, frame = cap.read()
-        if ret:
+        ret, frame = cap.read() ####captures a single frame
+        if ret:  ##if successful(if ret is true), runs code below
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)  # Convert to RGB
-            img = Image.fromarray(frame)
-            tkimg = ImageTk.PhotoImage(image=img)
+            img = Image.fromarray(frame)##makes the image an object to be 
+            tkimg = ImageTk.PhotoImage(image=img) #then put that image into the GUI
 
-            cam_label.configure(image=tkimg)
+            cam_label.configure(image=tkimg)#rewties image
             cam_label.image = tkimg
 
             root.update()  # Update the tkinter window
-
     # Release the webcam when done
     cap.release()
-
     
 def check_data():
     try:
@@ -93,23 +93,23 @@ def rewrite(user,password):
     global infoDisplay_counter2
     global infoDisplay_counter3
     if (user == '' or password == ''):
-        empty = customtkinter.CTkLabel(root, text = 'Username or Password not filled', font = ("Times New Roman", 25), text_color='#fc2c03')
-        empty.pack_forget()
+        empty_username = customtkinter.CTkLabel(root, text = 'Username or Password not filled', font = ("Times New Roman", 25), text_color='#fc2c03')
+        empty_username.pack_forget()
         infoDisplay_counter1 += 1
-        empty.pack(pady = 1, padx = 2)
+        empty_username.pack(pady = 1, padx = 2)
         print(infoDisplay_counter1)
         if infoDisplay_counter1 == 2:
-            empty.destroy()
+            empty_username.destroy()
             infoDisplay_counter1 = 1
         return
         
     if (len(user) < 5):
-        short = customtkinter.CTkLabel(root, text = 'Username must have at least 5 characters', font = ("Times New Roman", 25), text_color='#fc2c03')
-        short.pack_forget()
+        too_short = customtkinter.CTkLabel(root, text = 'Username must have at least 5 characters', font = ("Times New Roman", 25), text_color='#fc2c03')
+        too_short.pack_forget()
         infoDisplay_counter2 += 1
-        short.pack(pady = 1, padx = 2)
+        too_short.pack(pady = 1, padx = 2)
         if infoDisplay_counter2 == 2:
-            short.destroy()
+            too_short.destroy()
             infoDisplay_counter2 = 1
         return
             
