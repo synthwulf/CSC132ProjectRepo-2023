@@ -4,6 +4,9 @@ import pickle
 import os
 from tempfile import NamedTemporaryFile
 
+from PIL import Image, ImageTk
+import cv2
+
 ### {usename : password}
 customtkinter.set_appearance_mode('dark')
 customtkinter.set_default_color_theme('blue')
@@ -28,23 +31,48 @@ def clear_frame():
         widgets.destroy()
 
 
-def display_camera():   #### displays camera with options (Greyscale, or Normal Video) #[[[[TODO# embed video into frame]]]]]
+def display_camera():
     clear_frame()
-    frame = customtkinter.CTkFrame(master = root)
-    frame.pack(pady = 20, padx = 60, fill = 'both', expand= True)
-    
+    frame = customtkinter.CTkFrame(master=root)
+    frame.pack(pady=20, padx=60, fill='both', expand=True)
+
     time_text = login_time()
-    button = customtkinter.CTkButton(root, text = 'Greyscale')
-    button.pack(padx = 12, pady = 0)
-    
-    button2 = customtkinter.CTkButton(root, text = 'Normal Video')
-    button2.pack(pady = 12, padx = 0)
-    
-    label = customtkinter.CTkLabel(root, text = time_text)
-    label.pack(pady = 10, padx = 10)
-    
-    logout_button = customtkinter.CTkButton(master = frame, text = 'Logout', command = lambda: login_page())
-    logout_button.pack(pady = 5, padx = 10)
+    button = customtkinter.CTkButton(frame, text='Greyscale')
+    button.pack(padx=12, pady=0)
+
+    button2 = customtkinter.CTkButton(frame, text='Normal Video')
+    button2.pack(pady=12, padx=0)
+
+    label = customtkinter.CTkLabel(frame, text=time_text)
+    label.pack(pady=10, padx=10)
+
+    logout_button = customtkinter.CTkButton(master=frame, text='Logout', command=login_page)
+    logout_button.pack(pady=5, padx=10)
+
+    # Camera capture and display
+    cap = cv2.VideoCapture(0)
+    if not cap.isOpened():
+        print("Error: Unable to access the webcam.")
+        return
+
+    cam_label = customtkinter.CTkLabel(frame)
+    cam_label.pack(pady=1, padx=1)
+
+    while True:
+        ret, frame = cap.read()
+        if ret:
+            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)  # Convert to RGB
+            img = Image.fromarray(frame)
+            tkimg = ImageTk.PhotoImage(image=img)
+
+            cam_label.configure(image=tkimg)
+            cam_label.image = tkimg
+
+            root.update()  # Update the tkinter window
+
+    # Release the webcam when done
+    cap.release()
+
     
 def check_data():
     try:
