@@ -33,6 +33,11 @@ def clear_frame():
 
 def display_camera():
     clear_frame()
+    # Camera capture and display
+    cap = cv2.VideoCapture(0)
+    if not cap.isOpened():
+        print("Error: Unable to access the webcam.")
+        return
     frame = customtkinter.CTkFrame(master=root)
     frame.pack(pady=20, padx=60, fill='both', expand=True)
 
@@ -46,16 +51,10 @@ def display_camera():
     label = customtkinter.CTkLabel(frame, text=time_text)
     label.pack(pady=10, padx=10)
 
-    logout_button = customtkinter.CTkButton(master=frame, text='Logout', command=login_page)
+    logout_button = customtkinter.CTkButton(master=frame, text='Logout', command=lambda:[login_page(),cap.release()])
     logout_button.pack(pady=5, padx=10)
 
-    # Camera capture and display
-    cap = cv2.VideoCapture(0)
-    if not cap.isOpened():
-        print("Error: Unable to access the webcam.")
-        return
-
-    cam_label = customtkinter.CTkLabel(frame)
+    cam_label = customtkinter.CTkLabel(frame, text = "")
     cam_label.pack(pady=1, padx=1)
     
     ### continuosly captures frame from video source converts them into RGB then displays the frame in the GUI
@@ -66,12 +65,10 @@ def display_camera():
             img = Image.fromarray(frame)##makes the image an object to be 
             tkimg = ImageTk.PhotoImage(image=img) #then put that image into the GUI
 
-            cam_label.configure(image=tkimg)#rewties image
+            cam_label.configure(image=tkimg) #rewties image
             cam_label.image = tkimg
 
             root.update()  # Update the tkinter window
-    # Release the webcam when done
-    cap.release()
     
 def check_data():
     try:
@@ -84,47 +81,51 @@ def check_data():
 def hasNumber(input):
     return any(char.isdigit() for char in input)
 
-infoDisplay_counter1 = 0
-infoDisplay_counter2= 0
-infoDisplay_counter3 = 0
+infoDisplay_counter = 0
 def rewrite(user,password):
-    global infoDisplay_counter1
-    global infoDisplay_counter2
-    global infoDisplay_counter3
+    global infoDisplay_counter
+    global error_label
     if (user == '' or password == ''):
-        empty_username = customtkinter.CTkLabel(root, text = 'Username or Password not filled', font = ("Times New Roman", 25), text_color='#fc2c03')
-        empty_username.pack_forget()
-        infoDisplay_counter1 += 1
-        empty_username.pack(pady = 1, padx = 2)
-        print(infoDisplay_counter1)
-        if infoDisplay_counter1 == 2:
-            empty_username.destroy()
-            infoDisplay_counter1 = 1
+        try:
+            error_label.configure(text = "Username or Password not filled")
+        except:
+            error_label = customtkinter.CTkLabel(root, text = 'Username or Password not filled', font = ("Times New Roman", 25), text_color='#fc2c03')
+            error_label.pack_forget()
+            infoDisplay_counter += 1
+            error_label.pack(pady = 1, padx = 2)
+            print(infoDisplay_counter)
+            if infoDisplay_counter == 2:
+                error_label.destroy()
+                infoDisplay_counter = 1
         return
         
     if (len(user) < 5):
-        too_short = customtkinter.CTkLabel(root, text = 'Username must have at least 5 characters', font = ("Times New Roman", 25), text_color='#fc2c03')
-        too_short.pack_forget()
-        infoDisplay_counter2 += 1
-        too_short.pack(pady = 1, padx = 2)
-        if infoDisplay_counter2 == 2:
-            too_short.destroy()
-            infoDisplay_counter2 = 1
+        try:
+            error_label.configure(text = "Username must have at least 5 characters")
+        except:
+            error_label = customtkinter.CTkLabel(root, text = 'Username must have at least 5 characters', font = ("Times New Roman", 25), text_color='#fc2c03')
+            error_label.pack_forget()
+            infoDisplay_counter += 1
+            error_label.pack(pady = 1, padx = 2)
+            if infoDisplay_counter == 2:
+                error_label.destroy()
+                infoDisplay_counter = 1
         return
             
     if (hasNumber(password) == False):
-        no_number = customtkinter.CTkLabel(root, text = 'Password must have at least 1 number', font = ("Times New Roman", 25), text_color='#fc2c03')
-        no_number.pack_forget()
-        infoDisplay_counter3 += 1
-        no_number.pack(pady = 1, padx = 2)
-        if infoDisplay_counter3 == 2:
-            no_number.destroy()
-            infoDisplay_counter3 = 1
+        try:
+            error_label.configure(text = "Password must have at least 1 number")
+        except:
+            error_label = customtkinter.CTkLabel(root, text = 'Password must have at least 1 number', font = ("Times New Roman", 25), text_color='#fc2c03')
+            error_label.pack_forget()
+            infoDisplay_counter += 1
+            error_label.pack(pady = 1, padx = 2)
+            if infoDisplay_counter == 2:
+                error_label.destroy()
+                infoDisplay_counter = 1
         return
     
-    infoDisplay_counter1 = 0
-    infoDisplay_counter2 = 0
-    infoDisplay_counter3 = 0
+    infoDisplay_counter = 0
     retrieved_data = check_data()
     with open(data_file, 'wb') as t:
         retrieved_data.update({user:password})
