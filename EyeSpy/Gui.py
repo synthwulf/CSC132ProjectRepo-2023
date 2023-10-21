@@ -19,10 +19,9 @@ data_file = file_path + '/'+ "users.pkl"
 def login_time():
     today = datetime.datetime.now() #### I is 12- hour ##### computer thing
     
-    
     ##### display at top (or bottom) of frame after login button was pressed ####
     t = today.strftime("%m/%d/%Y, %I:%M:%S")# ------> https://docs.python.org/3/library/time.html ; https://stackoverflow.com/questions/14762518/python-datetime-strptime-and-strftime-how-to-preserve-the-timezone-informat              
-    tdb = open('Time Log.txt', 'a')
+    tdb = open(file_path + "/" + 'Time_Log.txt', 'a')
     tdb.write(t+ '\n')
         
     return 'Logged in at {} '.format(t)
@@ -127,12 +126,13 @@ def rewrite(user,password):
     infoDisplay_counter2 = 0
     infoDisplay_counter3 = 0
     retrieved_data = check_data()
-    with open('users.pkl', 'wb') as t:
+    with open(data_file, 'wb') as t:
         retrieved_data.update({user:password})
-        pickle.dump(retrieved_data, t)                                            #### created as a pkl file
-    with NamedTemporaryFile("wb", dir=os.path.dirname(data_file),delete=False) as t: #### create a temp file to store data to later then be                                                                             
+        pickle.dump(retrieved_data, t)#### created as a pkl file
+        
+    with NamedTemporaryFile("wb", dir=file_path,delete=False) as t: #### create a temp file to store data to later then be                                                                             
         pickle.dump(retrieved_data,t)                                                #### created as a pkl file
-    os.replace(t.name,"users.pkl")
+    os.replace(t.name,data_file)
     login_page()
 
 def new_user():
