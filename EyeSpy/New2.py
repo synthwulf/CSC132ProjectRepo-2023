@@ -142,7 +142,7 @@ def display_camera():
     frame.pack(pady=20, padx=60, fill='both', expand=True)
 
     time_text = login_time()
-    button = customtkinter.CTkButton(frame, text='Security', command=security_syst)  # Added command to call convert_to_grayscale
+    button = customtkinter.CTkButton(frame, text='Security', command=security_syst)  # Added command to call convert_to_security
     button.pack(padx=12, pady=0)
     button = customtkinter.CTkButton(frame, text='Greyscale', command=convert_to_grayscale)  # Added command to call convert_to_grayscale
     button.pack(padx=12, pady=0)
